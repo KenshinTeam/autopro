@@ -72,8 +72,8 @@ class DeleteProduct extends Command
     {
         $total = $this->countProduct();
         $countFor = round($total / $this->limit) + 1;
-
         for ($i = 0; $i < $countFor; $i++) {
+            echo $i;
             $products = $this->client->get('products', [
                 'filter[limit]' => $this->limit,
                 'filter[offset]' => $this->limit * $i,
@@ -81,8 +81,9 @@ class DeleteProduct extends Command
             ]);
 
             foreach ($products['products'] as $product) {
-                if (isset($product['id']) && empty($product['images'])) {
+                if (isset($product['id']) && count($product['images']) == 1) {
                     $this->client->delete('products/' . $product['id'], ['force' => true]);
+                    echo $product['id'];
                 }
             }
         }
